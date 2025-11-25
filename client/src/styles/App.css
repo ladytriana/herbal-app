@@ -242,8 +242,24 @@ html {
 .image-container img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
   display: block;
+}
+
+/* Image display modes */
+.object-cover {
+  object-fit: cover;
+}
+
+.object-contain {
+  object-fit: contain;
+}
+
+.object-fill {
+  object-fit: fill;
+}
+
+.object-scale-down {
+  object-fit: scale-down;
 }
 
 /* ===== LOADING SKELETON ===== */

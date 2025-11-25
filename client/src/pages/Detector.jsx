@@ -251,7 +251,7 @@ function Detector() {
 
                 {/* Instruction Text */}
                 <p className="text-white text-center mt-4 text-sm font-medium">
-                  Posisikan tanaman obat di dalam kotak putih
+                  Posisikan daun di dalam kotak putih
                 </p>
               </div>
             </div>
@@ -372,13 +372,15 @@ function Detector() {
           <div className="animate-fade-in-up space-y-6">
             
             {/* IMAGE PREVIEW */}
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-black">
-              <LazyImage
-                src={preview}
-                alt="Plant Preview"
-                className="w-full h-96 object-cover"
-                onLoad={() => setImageLoaded(true)}
-              />
+            <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-white">
+              <div className="w-full h-96 flex items-center justify-center bg-gray-50">
+                <LazyImage
+                  src={preview}
+                  alt="Plant Preview"
+                  className="w-full h-full object-contain"
+                  onLoad={() => setImageLoaded(true)}
+                />
+              </div>
               
               {/* Hidden img for AI prediction */}
               <img 
@@ -391,14 +393,14 @@ function Detector() {
 
               {/* Result Overlay */}
               {result && (
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/80 to-transparent p-8 pt-24 text-white animate-slide-up">
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/85 to-transparent p-6 pt-16 text-white animate-slide-up rounded-b-3xl">
                   <div className="flex items-center gap-2 mb-3">
                     <div className="bg-green-500 rounded-full p-1">
                       <CheckCircle className="w-4 h-4 text-white" />
                     </div>
                     <span className="text-sm font-semibold text-green-400 tracking-wide uppercase">Teridentifikasi</span>
                   </div>
-                  <h2 className="text-4xl font-bold mb-2">{result.plantName}</h2>
+                  <h2 className="text-3xl font-bold mb-2">{result.plantName}</h2>
                   <p className="text-gray-300 text-sm italic">{plantInfo?.namaLatin}</p>
                 </div>
               )}
