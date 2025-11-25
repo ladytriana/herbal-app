@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="Identifikasi tanaman herbal dengan AI. Cepat, akurat, dan mudah digunakan." />
+    <meta name="keywords" content="tanaman herbal, identifikasi tanaman, AI, herb classifier, obat tradisional" />
+    <meta name="author" content="Herb Classifier Team" />
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#16a34a" />
+    <meta name="msapplication-TileColor" content="#16a34a" />
+
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png" />
+
+    <!-- Apple Mobile Web App -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Herb Classifier" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png" />
+
+    <!-- Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://herb-classifier.com/" />
+    <meta property="og:title" content="Herb Classifier - Identifikasi Tanaman Herbal dengan AI" />
+    <meta property="og:description" content="Kenali jenis dan khasiat tanaman herbal dengan teknologi AI yang cepat dan akurat" />
+    <meta property="og:image" content="/icons/icon-512x512.png" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://herb-classifier.com/" />
+    <meta property="twitter:title" content="Herb Classifier - Identifikasi Tanaman Herbal dengan AI" />
+    <meta property="twitter:description" content="Kenali jenis dan khasiat tanaman herbal dengan teknologi AI yang cepat dan akurat" />
+    <meta property="twitter:image" content="/icons/icon-512x512.png" />
+
+    <!-- Preload Model -->
+    <link rel="preload" href="/model/model.json" as="fetch" crossorigin="anonymous" />
+
+    <title>Herb Classifier - Identifikasi Tanaman Herbal dengan AI</title>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <!-- No Script Fallback -->
+    <noscript>
+      <div style="text-align: center; padding: 50px; font-family: sans-serif;">
+        <h1>🌿 Herb Classifier</h1>
+        <p>Aplikasi membutuhkan JavaScript agar dapat berjalan.</p>
+        <p>Silakan aktifkan JavaScript di browser Anda.</p>
+      </div>
+    </noscript>
+
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
