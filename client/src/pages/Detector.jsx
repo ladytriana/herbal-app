@@ -1,19 +1,8 @@
-// src/pages/Detector.jsx
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
-  ArrowLeft, 
-  Camera, 
-  Upload, 
-  X, 
-  RefreshCw, 
-  CheckCircle, 
-  ExternalLink, 
-  Sparkles, 
-  TrendingUp, 
-  Leaf,
-  AlertCircle,
-  BookOpen
+  ArrowLeft, Camera, Upload, X, RefreshCw, CheckCircle, ExternalLink, 
+  Sparkles, TrendingUp, Leaf, AlertCircle, BookOpen 
 } from 'lucide-react';
 import Webcam from 'react-webcam'; 
 import classifier from '../utils/HerbalClassifier';
@@ -30,7 +19,7 @@ function Detector() {
   const [loading, setLoading] = useState(true);
   const [analyzing, setAnalyzing] = useState(false);
   const [showWebcam, setShowWebcam] = useState(false); 
-  const [cameraDevice, setCameraDevice] = useState("environment"); // Default ke rear camera
+  const [cameraDevice, setCameraDevice] = useState("environment");
   const [activeTab, setActiveTab] = useState('detail');
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -42,7 +31,7 @@ function Detector() {
   const location = useLocation();
   const mode = location.state?.action; 
 
-  // INITIALIZE MODEL
+  // --- INITIALIZE MODEL ---
   useEffect(() => {
     async function init() {
       const interval = setInterval(() => {
@@ -66,7 +55,6 @@ function Detector() {
     init();
   }, [mode]);
 
-  // HANDLE FILE UPLOAD
   const handleUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -80,7 +68,6 @@ function Detector() {
     }
   };
 
-  // CAPTURE FROM WEBCAM
   const capture = useCallback(() => {
     const imageSrc = webcamRef.current.getScreenshot();
     setPreview(imageSrc);
@@ -91,7 +78,7 @@ function Detector() {
     setImageLoaded(false);
   }, [webcamRef]);
 
-  // PREDICT IMAGE WITH AI
+  // --- PREDICT IMAGE ---
   const predictImage = async () => {
     if (imageRef.current) {
       setAnalyzing(true);
@@ -129,50 +116,37 @@ function Detector() {
           confidence: prediction.confidence,
           date: new Date().toLocaleString()
         });
-      } catch (error) { 
-        console.log("Log error"); 
-      }
+      } catch (error) { console.log("Log error"); }
 
       setAnalyzing(false);
     }
   };
 
-  // TOGGLE CAMERA
   const toggleCamera = () => {
     setCameraDevice(prev => prev === "user" ? "environment" : "user");
   };
 
-  // RESET ALL STATES
   const handleReset = () => {
     setPreview(null);
     setResult(null);
     setPlantInfo(null);
     setImage(null);
     setImageLoaded(false);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  // LOADING SCREEN
+  // --- LOADING SCREEN ---
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-3xl shadow-custom-xl p-10 max-w-md w-full animate-scale-up">
-          <div className="text-center">
-            <div className="w-28 h-28 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full flex items-center justify-center mx-auto mb-8 relative">
-              <div className="absolute inset-0 rounded-full border-4 border-green-500 border-t-transparent animate-spin"></div>
-              <Leaf className="w-14 h-14 text-green-600 animate-pulse" />
-            </div>
-            <h3 className="text-3xl font-bold text-gray-800 mb-3">Memuat Model AI</h3>
-            <p className="text-gray-600 mb-8 text-sm">Mohon tunggu sebentar...</p>
-            <div className="progress-container mb-4">
-              <div 
-                className="progress-bar bg-gradient-to-r from-green-500 to-emerald-500"
-                style={{ width: `${loadingProgress}%` }}
-              ></div>
-            </div>
-            <p className="text-lg text-green-600 font-bold">{loadingProgress}%</p>
+        <div className="bg-white rounded-3xl shadow-custom-xl p-10 max-w-md w-full animate-scale-up text-center">
+          <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 relative">
+            <div className="absolute inset-0 rounded-full border-4 border-green-500 border-t-transparent animate-spin"></div>
+            <Leaf className="w-10 h-10 text-green-600 animate-pulse" />
+          </div>
+          <h3 className="text-2xl font-bold text-gray-800 mb-2">Memuat Model AI</h3>
+          <div className="h-2 bg-gray-100 rounded-full mt-4 overflow-hidden">
+            <div className="h-full bg-green-500 transition-all duration-300" style={{ width: `${loadingProgress}%` }}></div>
           </div>
         </div>
       </div>
@@ -180,383 +154,292 @@ function Detector() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 font-sans">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 font-sans pb-20">
       
-      {/* WEBCAM MODAL - CONTAINED SIZE */}
+      {/* WEBCAM MODAL (RESPONSIVE FIX) */}
       {showWebcam && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
+        <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 animate-fade-in">
           
-          {/* WEBCAM CONTAINER */}
-          <div className="relative w-full max-w-2xl bg-black rounded-3xl overflow-hidden shadow-2xl border-4 border-gray-800 animate-scale-up">
+          {/* Container dibuat width 95% di HP dan max-w-2xl di Laptop */}
+          <div className="relative w-[95%] max-w-2xl bg-black rounded-3xl overflow-hidden border-2 border-gray-700 shadow-2xl flex flex-col max-h-[90vh]">
             
-            {/* WEBCAM PREVIEW */}
-            <div className="relative aspect-video">
+            {/* Bagian Video: aspect-[3/4] untuk HP (Potrait), aspect-video untuk Laptop (Landscape) */}
+            <div className="relative aspect-[3/4] md:aspect-video w-full bg-gray-900 overflow-hidden">
               <Webcam 
                 audio={false} 
                 ref={webcamRef} 
                 screenshotFormat="image/jpeg" 
                 videoConstraints={{ 
                   facingMode: cameraDevice,
-                  width: { ideal: 1280 },
-                  height: { ideal: 720 }
+                  // Agar responsif, kita tidak hardcode width/height di sini
                 }} 
                 className="w-full h-full object-cover"
               />
 
-              {/* TOP BAR - Status & Close */}
-              <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between bg-gradient-to-b from-black/60 to-transparent">
-                <div className="flex items-center gap-2 bg-green-500/90 backdrop-blur-sm px-4 py-2 rounded-full">
+              {/* Top Bar Controls (Live Badge & Close) */}
+              <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between bg-gradient-to-b from-black/70 to-transparent z-10">
+                <div className="flex items-center gap-2 bg-green-500/90 backdrop-blur-sm px-3 py-1.5 rounded-full">
                   <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                  <span className="text-white text-sm font-bold">Live</span>
+                  <span className="text-white text-xs font-bold uppercase tracking-wide">Live</span>
                 </div>
                 
                 <button 
                   onClick={() => setShowWebcam(false)} 
-                  className="bg-red-500/90 backdrop-blur-sm p-3 rounded-full text-white hover:bg-red-600 transition-smooth shadow-lg hover-scale btn-press"
+                  className="bg-black/40 backdrop-blur-md p-2 rounded-full text-white hover:bg-red-600 transition-all border border-white/20"
                 >
-                  <X className="w-6 h-6" />
+                  <X className="w-5 h-5" />
                 </button>
               </div>
 
-              {/* CAMERA GUIDE OVERLAY */}
-              <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-                <div className="w-64 h-64 border-4 border-white/40 rounded-3xl"></div>
-              </div>
-
-              {/* BOTTOM CONTROLS */}
-              <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/70 to-transparent">
-                <div className="flex items-center justify-center gap-8">
-                  
-                  {/* Flip Camera Button */}
-                  <button 
-                    onClick={toggleCamera} 
-                    className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-smooth shadow-lg hover-scale btn-press"
-                    title="Flip Camera"
-                  >
-                    <RefreshCw className="w-6 h-6" />
-                  </button>
-                  
-                  {/* Capture Button */}
-                  <button 
-                    onClick={capture} 
-                    className="w-20 h-20 bg-white rounded-full border-4 border-white/50 shadow-2xl hover:scale-95 transition-transform active:scale-90 flex items-center justify-center"
-                    title="Capture Photo"
-                  >
-                    <Camera className="w-8 h-8 text-green-600" />
-                  </button>
-                  
-                  {/* Placeholder for symmetry */}
-                  <div className="w-14 h-14"></div>
+              {/* Guide Overlay (Kotak Putih) */}
+              <div className="absolute inset-0 pointer-events-none flex items-center justify-center z-0 p-8">
+                <div className="w-full h-full max-w-[250px] max-h-[250px] border-2 border-white/80 rounded-3xl relative">
+                  {/* Pojok-pojok agar terlihat seperti viewfinder */}
+                  <div className="absolute top-0 left-0 w-4 h-4 border-t-4 border-l-4 border-green-400 -mt-1 -ml-1 rounded-tl-lg"></div>
+                  <div className="absolute top-0 right-0 w-4 h-4 border-t-4 border-r-4 border-green-400 -mt-1 -mr-1 rounded-tr-lg"></div>
+                  <div className="absolute bottom-0 left-0 w-4 h-4 border-b-4 border-l-4 border-green-400 -mb-1 -ml-1 rounded-bl-lg"></div>
+                  <div className="absolute bottom-0 right-0 w-4 h-4 border-b-4 border-r-4 border-green-400 -mb-1 -mr-1 rounded-br-lg"></div>
                 </div>
-
-                {/* Instruction Text */}
-                <p className="text-white text-center mt-4 text-sm font-medium">
-                  Posisikan daun di dalam kotak putih
-                </p>
               </div>
+            </div>
+
+            {/* Bagian Kontrol Bawah (Terpisah dari Video) */}
+            <div className="bg-gray-900 p-6 flex flex-col items-center justify-center border-t border-gray-800 shrink-0">
+              <div className="flex items-center justify-center gap-10">
+                
+                {/* Flip Camera */}
+                <button 
+                  onClick={toggleCamera} 
+                  className="p-4 bg-gray-800 rounded-full text-white hover:bg-gray-700 transition active:scale-95"
+                >
+                  <RefreshCw className="w-6 h-6" />
+                </button>
+
+                {/* Shutter Button (Jepret) */}
+                <button 
+                  onClick={capture} 
+                  className="w-20 h-20 bg-white rounded-full border-4 border-green-500 shadow-[0_0_20px_rgba(34,197,94,0.5)] active:scale-90 transition transform flex items-center justify-center hover:bg-gray-100"
+                >
+                   <Camera className="w-8 h-8 text-green-600" />
+                </button>
+
+                {/* Dummy Spacer agar tombol tengah pas */}
+                <div className="w-14"></div> 
+              </div>
+              
+              <p className="text-gray-400 text-xs mt-4 font-medium text-center">
+                Pastikan tanaman berada dalam kotak fokus
+              </p>
             </div>
 
           </div>
-
         </div>
       )}
 
-      {/* ANALYZING MODAL */}
+      {/* ANALYZING LOADING */}
       {analyzing && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-white rounded-3xl p-10 max-w-md mx-4 shadow-custom-xl animate-scale-up">
-            <div className="text-center">
-              <div className="w-28 h-28 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full flex items-center justify-center mx-auto mb-8 relative glow-pulse">
-                <div className="absolute inset-0 rounded-full border-4 border-green-500 border-t-transparent animate-spin"></div>
-                <Sparkles className="w-14 h-14 text-green-600 animate-pulse" />
-              </div>
-              <h3 className="text-3xl font-bold text-gray-800 mb-3">Menganalisis Gambar</h3>
-              <p className="text-gray-600 mb-8 text-sm">AI sedang memproses tanaman Anda...</p>
-              <div className="flex items-center justify-center gap-3">
-                <div className="w-3 h-3 bg-green-500 rounded-full animate-bounce"></div>
-                <div className="w-3 h-3 bg-green-500 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
-                <div className="w-3 h-3 bg-green-500 rounded-full animate-bounce" style={{animationDelay: '0.4s'}}></div>
-              </div>
-            </div>
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center animate-fade-in">
+          <div className="bg-white p-8 rounded-3xl shadow-2xl flex flex-col items-center animate-scale-up">
+            <div className="w-16 h-16 border-4 border-green-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+            <p className="text-gray-700 font-bold">Sedang Menganalisis...</p>
           </div>
         </div>
       )}
 
       {/* HEADER */}
-      <header className="bg-gradient-to-r from-green-600 to-emerald-600 p-5 sticky top-0 z-40 text-white shadow-lg animate-slide-up">
+      <header className="bg-white/80 backdrop-blur-md sticky top-0 z-40 border-b border-gray-200 px-4 py-3 shadow-sm">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link to="/" className="hover-scale transition-smooth p-2 hover:bg-white/10 rounded-lg">
-              <ArrowLeft className="w-6 h-6" />
-            </Link>
-            <div>
-              <h1 className="font-bold text-lg">Identifikasi Tanaman</h1>
-              <p className="text-xs text-green-100 flex items-center gap-1">
-                <Sparkles className="w-3 h-3" />
-                Powered by AI
-              </p>
-            </div>
-          </div>
-          {!loading && (
-            <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full">
-              <CheckCircle className="w-4 h-4" />
-              <span className="text-xs font-medium">Ready</span>
-            </div>
-          )}
+          <Link to="/" className="p-2 hover:bg-gray-100 rounded-full transition">
+            <ArrowLeft className="w-6 h-6 text-gray-700" />
+          </Link>
+          <h1 className="font-bold text-gray-800 text-lg">Identifikasi Tanaman</h1>
+          <div className="w-10"></div> {/* Spacer */}
         </div>
       </header>
 
       {/* MAIN CONTENT */}
-      <main className="max-w-4xl mx-auto px-4 py-6">
-        <input 
-          type="file" 
-          accept="image/*" 
-          ref={fileInputRef} 
-          onChange={handleUpload} 
-          className="hidden" 
-        />
+      <main className="max-w-xl mx-auto px-4 py-6">
+        <input type="file" accept="image/*" ref={fileInputRef} onChange={handleUpload} className="hidden" />
 
-        {/* EMPTY STATE */}
+        {/* STATE 1: BELUM ADA GAMBAR */}
         {!preview ? (
-          <div className="bg-white rounded-3xl shadow-lg border-2 border-gray-100 text-center py-20 mt-6 animate-fade-in-up">
-            {mode === 'camera' && (
-              <div className="px-8 animate-scale-up">
-                <div className="w-28 h-28 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full flex items-center justify-center mx-auto mb-8 glow-pulse">
-                  <Camera className="w-14 h-14 text-green-600 animate-float" />
+          <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 text-center mt-4 animate-fade-in-up">
+            {mode === 'camera' ? (
+              <>
+                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Camera className="w-10 h-10 text-green-600" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-800 mb-3">Kamera Siap</h3>
-                <p className="text-gray-500 mb-10 text-sm max-w-md mx-auto leading-relaxed">
-                  Klik tombol di bawah untuk membuka kamera dan mulai mengambil foto tanaman
-                </p>
-                <button 
-                  onClick={() => setShowWebcam(true)} 
-                  className="bg-gradient-to-r from-green-600 to-emerald-600 text-white font-bold py-4 px-8 rounded-full inline-flex items-center gap-3 shadow-xl hover:shadow-2xl hover-scale transition-smooth btn-press group"
-                >
-                  <Camera className="w-6 h-6 group-hover:animate-wiggle"/>
+                <h3 className="font-bold text-xl text-gray-800 mb-2">Kamera Siap</h3>
+                <p className="text-gray-500 mb-6 text-sm">Ambil foto tanaman secara langsung</p>
+                <button onClick={() => setShowWebcam(true)} className="w-full bg-green-600 text-white font-bold py-3 rounded-xl shadow-lg hover:bg-green-700 transition transform active:scale-95">
                   Buka Kamera
                 </button>
-              </div>
-            )}
-
-            {mode === 'upload' && (
-              <div className="px-8 animate-scale-up">
-                <div className="w-28 h-28 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-full flex items-center justify-center mx-auto mb-8 glow-pulse">
-                  <Upload className="w-14 h-14 text-blue-600 animate-float" />
+              </>
+            ) : mode === 'upload' ? (
+              <>
+                <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Upload className="w-10 h-10 text-blue-600" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-800 mb-3">Upload Gambar</h3>
-                <p className="text-gray-500 mb-10 text-sm max-w-md mx-auto leading-relaxed">
-                  Pilih foto tanaman dari galeri Anda untuk dianalisis
-                </p>
-                <button 
-                  onClick={() => fileInputRef.current.click()} 
-                  className="bg-white border-2 border-green-600 text-green-600 font-bold py-4 px-8 rounded-full inline-flex items-center gap-3 hover:bg-green-50 transition-smooth shadow-md hover-scale btn-press group"
-                >
-                  <Upload className="w-6 h-6 group-hover:animate-wiggle"/>
-                  Pilih Gambar
+                <h3 className="font-bold text-xl text-gray-800 mb-2">Upload Gambar</h3>
+                <p className="text-gray-500 mb-6 text-sm">Pilih foto dari galeri perangkat Anda</p>
+                <button onClick={() => fileInputRef.current.click()} className="w-full bg-blue-600 text-white font-bold py-3 rounded-xl shadow-lg hover:bg-blue-700 transition transform active:scale-95">
+                  Pilih File
                 </button>
-              </div>
-            )}
-
-            {!mode && (
-              <div className="px-8">
-                <AlertCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-400 mb-6">Silakan kembali ke Home untuk memilih mode</p>
-                <Link to="/" className="bg-gradient-to-r from-green-600 to-emerald-600 text-white font-bold py-4 px-8 rounded-full inline-flex items-center gap-3 shadow-xl hover:shadow-2xl hover-scale transition-smooth btn-press">
-                  <ArrowLeft className="w-5 h-5" />
-                  Kembali ke Beranda
-                </Link>
+              </>
+            ) : (
+              <div className="text-center">
+                <p className="text-gray-400 mb-4">Silakan kembali ke menu utama</p>
+                <Link to="/" className="text-green-600 font-bold underline">Ke Beranda</Link>
               </div>
             )}
           </div>
         ) : (
-          <div className="animate-fade-in-up space-y-6">
+          /* STATE 2: SUDAH ADA GAMBAR (PREVIEW / RESULT) */
+          <div className="space-y-6 animate-fade-in">
             
-            {/* IMAGE PREVIEW */}
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-white">
-              <div className="w-full h-96 flex items-center justify-center bg-gray-50">
-                <LazyImage
-                  src={preview}
-                  alt="Plant Preview"
-                  className="w-full h-full object-contain"
-                  onLoad={() => setImageLoaded(true)}
-                />
-              </div>
-              
-              {/* Hidden img for AI prediction */}
+            {/* IMAGE CARD */}
+            <div className="relative rounded-3xl overflow-hidden shadow-lg bg-black group">
               <img 
                 ref={imageRef} 
                 src={preview} 
-                className="hidden" 
-                alt="Hidden for prediction"
+                className="w-full h-80 object-contain bg-gray-900" 
+                alt="Preview" 
                 crossOrigin="anonymous"
               />
-
-              {/* Result Overlay */}
-              {result && (
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/85 to-transparent p-6 pt-16 text-white animate-slide-up rounded-b-3xl">
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="bg-green-500 rounded-full p-1">
-                      <CheckCircle className="w-4 h-4 text-white" />
-                    </div>
-                    <span className="text-sm font-semibold text-green-400 tracking-wide uppercase">Teridentifikasi</span>
-                  </div>
-                  <h2 className="text-3xl font-bold mb-2">{result.plantName}</h2>
-                  <p className="text-gray-300 text-sm italic">{plantInfo?.namaLatin}</p>
-                </div>
-              )}
-
-              {/* Close Button */}
+              
+              {/* TOMBOL HAPUS (X) - Muncul jika belum ada hasil */}
               {!result && (
-                <button
+                <button 
                   onClick={handleReset}
-                  className="absolute top-4 right-4 bg-red-500/90 backdrop-blur-sm p-3 rounded-full text-white hover:bg-red-600 transition-smooth shadow-lg hover-scale btn-press"
-                  title="Remove Image"
+                  className="absolute top-3 right-3 bg-black/50 p-2 rounded-full text-white hover:bg-red-500 transition"
                 >
                   <X className="w-5 h-5" />
                 </button>
               )}
-            </div>
 
-            {/* ANALYZE BUTTON */}
-            {preview && !result && imageLoaded && (
-              <button 
-                onClick={predictImage} 
-                className="w-full bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 text-white font-bold py-5 rounded-2xl shadow-xl hover:shadow-2xl hover-scale transition-smooth text-lg flex items-center justify-center gap-3 btn-press gradient-animate"
-              >
-                <Sparkles className="w-6 h-6 animate-pulse" />
-                Analisis dengan AI
-              </button>
-            )}
-
-          </div>
-        )}
-
-        {/* RESULT INFO CARD */}
-        {result && plantInfo && (
-          <div className="bg-white rounded-3xl shadow-xl border-2 border-gray-100 overflow-hidden animate-scale-up mt-6">
-            
-            {/* TABS */}
-            <div className="flex border-b border-gray-200 bg-gray-50">
-              <button 
-                onClick={() => setActiveTab('detail')} 
-                className={`flex-1 py-4 text-sm font-bold transition-smooth relative ${
-                  activeTab === 'detail' ? 'text-green-600 bg-white' : 'text-gray-400 hover:text-gray-600'
-                }`}
-              >
-                <BookOpen className="w-4 h-4 inline mr-2" />
-                Detail (Wiki)
-                {activeTab === 'detail' && (
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-green-500 to-emerald-500"></div>
-                )}
-              </button>
-              <button 
-                onClick={() => setActiveTab('khasiat')} 
-                className={`flex-1 py-4 text-sm font-bold transition-smooth relative ${
-                  activeTab === 'khasiat' ? 'text-green-600 bg-white' : 'text-gray-400 hover:text-gray-600'
-                }`}
-              >
-                <Sparkles className="w-4 h-4 inline mr-2" />
-                Khasiat & Resep
-                {activeTab === 'khasiat' && (
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-green-500 to-emerald-500"></div>
-                )}
-              </button>
-            </div>
-
-            {/* TAB CONTENT */}
-            <div className="p-6">
-              {activeTab === 'detail' ? (
-                <div className="space-y-6 animate-fade-in">
-                  {/* Confidence Bar */}
-                  <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
-                        <TrendingUp className="w-4 h-4" />
-                        Akurasi AI
-                      </span>
-                      <span className="text-lg font-bold text-green-700">{result.confidence}%</span>
-                    </div>
-                    <div className="progress-container h-4">
-                      <div 
-                        className="progress-bar bg-gradient-to-r from-green-500 to-emerald-500" 
-                        style={{ width: `${result.confidence}%` }}
-                      ></div>
-                    </div>
+              {/* OVERLAY HASIL */}
+              {result && (
+                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent p-6 pt-12 text-white">
+                  <div className="flex items-center gap-2 mb-1">
+                    <CheckCircle className="w-5 h-5 text-green-400" />
+                    <span className="text-xs font-bold text-green-400 uppercase tracking-widest">Teridentifikasi</span>
                   </div>
-
-                  {/* Description */}
-                  <div>
-                    <span className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-4">
-                      Deskripsi (Wikipedia)
-                    </span>
-                    <p className="text-gray-700 text-sm leading-relaxed text-justify">
-                      {plantInfo.deskripsi}
-                    </p>
-                    {plantInfo.wikiUrl && (
-                      <a 
-                        href={plantInfo.wikiUrl} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        className="inline-flex items-center gap-2 text-green-600 font-bold text-sm mt-5 hover:underline hover-scale transition-smooth group"
-                      >
-                        Baca selengkapnya di Wikipedia
-                        <ExternalLink className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"/>
-                      </a>
-                    )}
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-6 animate-fade-in">
-                  {/* Benefits */}
-                  <div>
-                    <h4 className="font-bold text-gray-800 text-lg mb-5 flex items-center gap-2">
-                      <Sparkles className="w-5 h-5 text-yellow-500" />
-                      Manfaat Utama
-                    </h4>
-                    <ul className="space-y-3">
-                      {plantInfo.khasiat && plantInfo.khasiat.length > 0 ? (
-                        plantInfo.khasiat.map((item, idx) => (
-                          <li 
-                            key={idx} 
-                            className="flex gap-3 text-sm text-gray-700 bg-green-50 p-4 rounded-xl border-2 border-green-100 hover-lift transition-smooth stagger-item animate-slide-in-left"
-                            style={{ animationDelay: `${idx * 0.1}s` }}
-                          >
-                            <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center shrink-0 text-white text-xs font-bold shadow-md">
-                              ✓
-                            </div>
-                            <span className="flex-1 leading-relaxed">{item}</span>
-                          </li>
-                        ))
-                      ) : (
-                        <p className="text-sm text-gray-400 italic">Data khasiat belum tersedia.</p>
-                      )}
-                    </ul>
-                  </div>
-
-                  {/* Processing */}
-                  <div className="bg-gradient-to-br from-orange-50 to-yellow-50 p-6 rounded-2xl border-2 border-orange-200 hover-lift transition-smooth">
-                    <h4 className="font-bold text-orange-800 text-lg mb-4 flex items-center gap-2">
-                      <RefreshCw className="w-5 h-5"/> 
-                      Saran Penyajian
-                    </h4>
-                    <p className="text-sm text-orange-900/80 leading-relaxed">
-                      {plantInfo.pengolahan || "Informasi pengolahan belum tersedia."}
-                    </p>
-                  </div>
+                  <h2 className="text-3xl font-bold capitalize">{result.plantName}</h2>
+                  <p className="text-gray-300 text-sm italic">{plantInfo?.namaLatin || "Nama Latin..."}</p>
                 </div>
               )}
             </div>
-            
-            {/* FOOTER ACTIONS */}
-            <div className="p-5 bg-gray-50 border-t border-gray-200 flex gap-3">
+
+            {/* ACTION BUTTON (ANALISIS) */}
+            {!result && (
               <button 
-                onClick={handleReset} 
-                className="flex-1 bg-white border-2 border-gray-300 text-gray-700 py-4 rounded-xl font-bold shadow-md hover:bg-gray-100 hover-scale transition-smooth btn-press flex items-center justify-center gap-2 group"
+                onClick={predictImage}
+                className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white font-bold py-4 rounded-2xl shadow-xl flex items-center justify-center gap-2 hover:shadow-2xl transition transform active:scale-95"
               >
-                <RefreshCw className="w-5 h-5 group-hover:rotate-180 transition-transform duration-500" />
-                Scan Lagi
+                <Sparkles className="w-5 h-5" />
+                Analisis Tanaman
               </button>
-            </div>
+            )}
+
+            {/* INFO CARD (HASIL) */}
+            {result && plantInfo && (
+              <>
+                <div className="bg-white rounded-3xl shadow-xl border-2 border-gray-100 overflow-hidden animate-scale-up mt-6">
+                  
+                  {/* TABS */}
+                  <div className="flex border-b border-gray-200 bg-gray-50">
+                    <button 
+                      onClick={() => setActiveTab('detail')} 
+                      className={`flex-1 py-4 text-sm font-bold transition-smooth relative ${
+                        activeTab === 'detail' ? 'text-green-600 bg-white' : 'text-gray-400 hover:text-gray-600'
+                      }`}
+                    >
+                      <BookOpen className="w-4 h-4 inline mr-2" />
+                      Detail (Wiki)
+                      {activeTab === 'detail' && (
+                        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-green-500 to-emerald-500"></div>
+                      )}
+                    </button>
+                    <button 
+                      onClick={() => setActiveTab('khasiat')} 
+                      className={`flex-1 py-4 text-sm font-bold transition-smooth relative ${
+                        activeTab === 'khasiat' ? 'text-green-600 bg-white' : 'text-gray-400 hover:text-gray-600'
+                      }`}
+                    >
+                      <Sparkles className="w-4 h-4 inline mr-2" />
+                      Khasiat & Resep
+                      {activeTab === 'khasiat' && (
+                        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-green-500 to-emerald-500"></div>
+                      )}
+                    </button>
+                  </div>
+
+                  {/* TAB CONTENT */}
+                  <div className="p-6">
+                    {activeTab === 'detail' ? (
+                      <div className="space-y-6 animate-fade-in">
+                        <div>
+                          <div className="flex justify-between items-center mb-2">
+                            <span className="text-xs font-bold text-gray-400 uppercase">Akurasi AI</span>
+                            <span className="text-sm font-bold text-green-600">{result.confidence}%</span>
+                          </div>
+                          <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                            <div className="h-full bg-green-500 rounded-full" style={{ width: `${result.confidence}%` }}></div>
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <span className="text-xs font-bold text-gray-400 uppercase block mb-2">Deskripsi (Wikipedia)</span>
+                          <p className="text-gray-600 text-sm leading-relaxed text-justify">
+                            {plantInfo.deskripsi}
+                          </p>
+                          {plantInfo.wikiUrl && (
+                            <a href={plantInfo.wikiUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-green-600 font-bold text-xs mt-3 hover:underline">
+                              Baca di Wikipedia <ExternalLink className="w-3 h-3" />
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-6 animate-fade-in">
+                        <div>
+                          <h4 className="font-bold text-gray-800 mb-3 flex items-center gap-2">
+                            <Sparkles className="w-4 h-4 text-yellow-500" /> Manfaat Utama
+                          </h4>
+                          <ul className="space-y-2">
+                            {plantInfo.khasiat?.map((k, i) => (
+                              <li key={i} className="flex gap-3 text-sm text-gray-600 bg-gray-50 p-3 rounded-lg border border-gray-100">
+                                <div className="w-5 h-5 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-xs font-bold shrink-0">✓</div>
+                                {k}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        
+                        <div className="bg-orange-50 p-4 rounded-xl border border-orange-100">
+                          <h4 className="font-bold text-orange-800 text-sm mb-2 flex items-center gap-2">
+                            <RefreshCw className="w-4 h-4" /> Saran Penyajian
+                          </h4>
+                          <p className="text-sm text-orange-900/80 leading-relaxed">
+                            {plantInfo.pengolahan}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* TOMBOL SCAN LAGI */}
+                <button 
+                  onClick={handleReset} 
+                  className="w-full bg-white text-gray-700 font-bold py-4 rounded-2xl shadow-lg border-2 border-gray-200 hover:bg-gray-50 hover:border-green-500 hover:text-green-600 transition-all transform active:scale-95 flex items-center justify-center gap-3 mt-6"
+                >
+                  <RefreshCw className="w-5 h-5" />
+                  Scan Tanaman Lain
+                </button>
+              </>
+            )}
+
           </div>
         )}
       </main>
